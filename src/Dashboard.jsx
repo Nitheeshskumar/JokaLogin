@@ -1,13 +1,39 @@
 import React from "react";
 import BackgroundImage from './components/background.jpg';
 import logo from './components/logo.png';
+import axios from 'axios';
+import { useHistory } from "react-router-dom";
 
 function Dashboard() {
+  let api_response=[];
+  let history = useHistory();
 
-  function handleForgot() {
-    console.log("forgot");
-    window.location.replace('http://localhost:3000/');
-    // history.push("/forgotpassword");
+  function handleBack() {
+    history.push("/Dashboard");
+  }
+
+  function handleJD() {
+    window.location.replace('https://www.youtube.com/');
+  }
+
+  function handleLogout() {
+    const auth_token = localStorage.getItem('joka_auth_token');
+    const headers = {
+      'joka_auth_token': auth_token,
+    }
+    axios.post('http://ec2-43-204-240-96.ap-south-1.compute.amazonaws.com/api/auth/logout',{}, {
+      headers: headers
+    })
+    .then(response => {
+      localStorage.setItem('auth_data', '');
+      localStorage.setItem('joka_auth_token','');
+      api_response = 'Logout Sucessful'
+      setTimeout( function() { handleBack(); }, 1000);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      api_response = 'Logout Failed'
+    });
   }
 
   return (
@@ -19,14 +45,33 @@ function Dashboard() {
           <img src={logo} style={{  width: "30%", marginLeft:"auto",marginRight:"auto", display:"block"}}></img>
           <div style={ BoxStyle }>
             <h1 style={{marginBottom: "0px"}}>Joka Utils</h1>
-            IIM Calcutta's Central Authentication service
+            IIM Calcutta
           </div>
               <div style={ BoxStyle }
                 className="is-underlined has-text-link"
-                onClick={handleForgot}
+                onClick={handleBack}
+              >
+                {" "}
+                Back
+              </div>
+              <div style={ BoxStyle }
+                className="is-underlined has-text-link"
+                onClick={handleJD}
               >
                 {" "}
                 Joka Directory
+              </div>
+              <div style={ BoxStyle }
+                className="is-underlined has-text-link"
+                onClick={handleLogout}
+              >
+                {" "}
+                Logout
+              </div>
+              <div>
+              {api_response && (
+                  <p> {api_response}</p>
+                )}
               </div>
           </div>
         </div>

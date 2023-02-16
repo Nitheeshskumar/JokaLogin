@@ -6,7 +6,6 @@ import logo from './components/logo.png';
 
   function handleForgot() {
     console.log("forgot");
-    window.location.replace('localhost:3000');
     // history.push("/forgotpassword");
   }
 
